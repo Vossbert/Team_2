@@ -25,7 +25,14 @@ def _(mo):
 
 @app.cell
 def _(pd):
-    tsar_data = pd.read_json("../data/tsar2025_trialdata.jsonl", lines=True)
+    import os
+    # Construct the absolute path to the data file
+    current_dir = os.path.dirname(__file__)
+    data_path = os.path.join(current_dir, "..", "data", "tsar2025_trialdata.jsonl")
+
+    # Open the file and pass the file object to pandas
+    with open(data_path, "r", encoding="utf-8") as f:
+        tsar_data = pd.read_json(f, lines=True)
     return (tsar_data,)
 
 

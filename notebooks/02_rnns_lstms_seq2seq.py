@@ -330,11 +330,11 @@ def _(torch):
 
 
     def load_data(
-        data_path, split="valid", simplification_idx=0, max_samples=None
+        data_path_str, split="valid", simplification_idx=0, max_samples=None
     ):
         """Load ASSET dataset"""
-        src_file = Path(data_path) / f"asset.{split}.orig"
-        tgt_file = Path(data_path) / f"asset.{split}.simp.{simplification_idx}"
+        src_file = Path(data_path_str) / f"asset.{split}.orig"
+        tgt_file = Path(data_path_str) / f"asset.{split}.simp.{simplification_idx}"
 
         with open(src_file, "r", encoding="utf-8") as f:
             src_sentences = [line.strip() for line in f if line.strip()]
@@ -402,14 +402,13 @@ def _(torch):
 
 @app.cell
 def _(mo):
-    data_path = mo.ui.file_browser(selection_mode="directory", multiple=False)
-    data_path
-    return (data_path,)
-
+    data_path_str = "./data/asset"
+    mo.md(f"**Data Path for ASSET Dataset:** `{data_path_str}`")
+    return (data_path_str,)
 
 @app.cell
-def _(data_path):
-    print(data_path.path(index=0))
+def _(data_path_str): 
+    print(data_path_str) 
     return
 
 
@@ -418,16 +417,16 @@ def _(
     SimplificationDataset,
     Vocabulary,
     collate_fn,
-    data_path,
+    data_path_str,
     load_data,
     mo,
     torch,
 ):
     train_data = load_data(
-        data_path.path(index=0), split="valid", simplification_idx=0, max_samples=None
+        data_path_str, split="valid", simplification_idx=0, max_samples=None
     )
 
-    test_data = load_data(data_path.path(index=0), split="test", simplification_idx=0)
+    test_data = load_data(data_path_str, split="test", simplification_idx=0)
 
     # Build vocabularies from training data only
     src_vocab = Vocabulary(min_freq=2)
